@@ -30,7 +30,7 @@ class App extends Component {
           <ul>
             {people.map(person => (
               <li key={person.id}>
-                {person.name}, {person.pet.dogName || person.pet.catName}
+                {person.name}
               </li>
             ))}
           </ul>
@@ -46,14 +46,6 @@ const withPeople = graphql(
     people {
       id
       name
-      pet {
-        ... on Dog {
-          dogName
-        }
-        ... on Cat {
-          catName
-        }
-      }
     }
   }`,
   {
