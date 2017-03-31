@@ -3,7 +3,14 @@ import { gql, graphql } from 'react-apollo';
 
 class App extends Component {
   doNothing = () => {
-    this.props.mutate().then((res) => console.log('doNothing result', res));
+    this.props.mutate({
+      updateQueries: {
+        getPeople: (prev) => {
+          console.log('update query people');
+          return prev;
+        }
+      }
+    }).then((res) => console.log('doNothing result', res));
   }
 
   render() {
@@ -42,12 +49,14 @@ class App extends Component {
 }
 
 const withPeople = graphql(
-  gql`{
-    people {
-      id
-      name
+  gql`
+    query getPeople {
+      people {
+        id
+        name
+      }
     }
-  }`,
+  `,
   {
     options: {
       reducer(prevResult) {
