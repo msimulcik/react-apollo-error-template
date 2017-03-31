@@ -1,0 +1,23 @@
+type Cat {
+  catName: String
+}
+
+type Dog {
+  dogName: String
+}
+
+type Mutation {
+  doNothing: String
+}
+
+type Person {
+  id: ID
+  name: String
+  pet: Pet
+}
+
+union Pet = Dog | Cat
+
+type Query {
+  people: [Person]
+}

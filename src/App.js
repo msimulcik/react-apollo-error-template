@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { gql, graphql } from 'react-apollo';
 
 class App extends Component {
+  doNothing = () => {
+    this.props.mutate().then((res) => console.log('doNothing result', res));
+  }
+
   render() {
     const { data: { loading, people } } = this.props;
     return (
@@ -26,21 +30,48 @@ class App extends Component {
           <ul>
             {people.map(person => (
               <li key={person.id}>
-                {person.name}
+                {person.name}, {person.pet.dogName || person.pet.catName}
               </li>
             ))}
           </ul>
         )}
+        <button onClick={this.doNothing}>Do nothing!</button>
       </main>
     );
   }
 }
 
-export default graphql(
+const withPeople = graphql(
   gql`{
     people {
       id
       name
+      pet {
+        ... on Dog {
+          dogName
+        }
+        ... on Cat {
+          catName
+        }
+      }
     }
   }`,
-)(App)
+  {
+    options: {
+      reducer(prevResult) {
+        console.log('people reducer');
+        return prevResult;
+      }
+    },
+  }
+);
+
+const withDoNothing = graphql(
+  gql`
+    mutation doNothing {
+      doNothing
+    }
+  `
+)
+
+export default withDoNothing(withPeople(App))
